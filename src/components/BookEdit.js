@@ -9,12 +9,16 @@ function BookEdit( {book, onSubmit} ){
         onSubmit(book.id, title);
     }
 
-    const hanldeChange = (event) => setTitle(event.target.value);
+    // const hanldeChange = (event) => setTitle(event.target.value);
+
+    const handleChange = (event) => {
+        setTitle(event.target.value);
+    };
         
     return (
         <form className="book-edit" onSubmit={handleSubmit}>
             <label>Title</label>
-            <input className="input" onChange={hanldeChange} value={title}/>
+            <input className="input" onChange={handleChange} value={title}/>
             <button className="button is-primary">Save</button>
         </form>
     );

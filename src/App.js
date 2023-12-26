@@ -1,20 +1,41 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import BookCreate from "./components/BookCreate";
 import BookList from "./components/BookList";
+import axios from 'axios';
+
 function App(){
     const [books, setBooks] = useState([]);
+    
+    const fetchBooks = async()=> {
+        const response = await axios.get('http://localhost:3001/books');
+        setBooks(response.data);
+    }
+    
+    useEffect(()=>{
+        fetchBooks();
+    }, []);
 
-    const createBook = (title) =>{
-        const randomID = Math.round(Math.random() * 9999);
-
-        const  updateBooks = [...books,{id:randomID, title:title}];
+    const createBook = async (title) =>{
+        const response = await axios.post('http://localhost:3001/books',
+                         {title:title}
+        );
+        
+        const updateBooks = [...books,response.data];
         setBooks(updateBooks);
+
+        /*const randomID = Math.round(Math.random() * 9999);
+        const  updateBooks = [...books,{id:randomID, title:title}];
+        setBooks(updateBooks);*/
     }
 
-    const updateBookID = (id, newTitle) => {
+    const updateBookID = async (id, newTitle) => {
+        const response = await axios.put(`http://localhost:3001/books/${id}`,{
+            title: newTitle
+        });
+
         const updateBooks = books.map((book)=>{
-                                if (book.id === id){
-                                    return{...book, title:newTitle}
+                                if (book.id === id){           
+                                    return {...book, ...response.data}
                                 }
                                 return book;
                             });
@@ -22,7 +43,10 @@ function App(){
         setBooks(updateBooks);
     }
 
-    const deleteBookByID = (id) =>{
+    const deleteBookByID = async (id) =>{
+        const response = await axios.delete(`http://localhost:3001/books/${id}`);
+        console.log("deleted:", response.data);
+        
         const updateBooks = books.filter((book)=>{
             return book.id !== id;
         });
