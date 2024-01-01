@@ -1,16 +1,17 @@
 import { useState } from "react";
 import BookEdit from "./BookEdit";
+import UseBooksContext from "../hooks/use-books-context";
 
-function BookShow({ book, onDelete, onEdit }){
-    const [showEdit, setShowEdit] = useState();
+function BookShow({ book }){
+    const [showEdit, setShowEdit] = useState(false);
+    const { deleteBook } = UseBooksContext();
 
     const handleDeleteClick = ()=>{
-        onDelete(book.id);
+        deleteBook(book.id);
     };
 
-    const hadleSubmit = (id, newTitle) =>{
+    const hadleSubmit = () =>{
         setShowEdit(false);
-        onEdit(id,newTitle);
     };
 
     const handleEditClick = ()=>{
@@ -30,7 +31,7 @@ function BookShow({ book, onDelete, onEdit }){
             <div className="actions">
                 <button className="edit" onClick={handleEditClick}>Edit</button>
                 <button className="delete" onClick={handleDeleteClick}>Delete</button>
-            </div>            
+            </div>
         </div>
     );
 }
